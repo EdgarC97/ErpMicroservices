@@ -1,0 +1,34 @@
+﻿version: '3.8'
+
+services:
+  db:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    container_name: memberapi_db
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=Riwi2025**
+    ports:
+      - "1433:1433"
+    networks:
+      - memberapi_net
+
+  memberservice:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        BUILD_CONFIGURATION: Release
+    container_name: memberservice_container
+    env_file:
+      - docker.env
+    ports:
+      - "5001:8080"
+      - "5002:8081"
+    depends_on:
+      - db
+    networks:
+      - memberapi_net
+
+networks:
+  memberapi_net:
+    driver: bridge

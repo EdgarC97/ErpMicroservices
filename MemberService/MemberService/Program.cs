@@ -1,23 +1,18 @@
-using Microsoft.EntityFrameworkCore;
+using dotenv.net;
 using MemberService.Data;
+using MemberService.DTOs;
 using MemberService.Repositories;
 using MemberService.Services;
-using MemberService.DTOs;
-using dotenv.net;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
-// Use .env file
+
 DotEnv.Load();
 
-// Get .env variables
-var dbHost = Environment.GetEnvironmentVariable("DB_HOST");
-var dbDatabase = Environment.GetEnvironmentVariable("DB_DATABASE");
-var dbUsername = Environment.GetEnvironmentVariable("DB_USERNAME");
-var dbPassword = Environment.GetEnvironmentVariable("DB_PASSWORD");
-var trustServerCertificate = Environment.GetEnvironmentVariable("TrustServerCertificate");
-
 // Database credential connection
-var connectionString = $"Server={dbHost};Database={dbDatabase};User Id={dbUsername};Password={dbPassword};TrustServerCertificate={trustServerCertificate};";
+var connectionString = Environment.GetEnvironmentVariable("DB_CONNECTION");
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseSqlServer(connectionString));
 
 // Register  DbContext
 builder.Services.AddDbContext<AppDbContext>(options =>
