@@ -5,12 +5,12 @@ using MemberService.Repositories;
 
 namespace MemberService.Services
 {
-    public class MemberService : IMemberService
+    public class MemberManagementService : IMemberService
     {
         private readonly IMemberRepository _repository;
         private readonly IMapper _mapper;
 
-        public MemberService(IMemberRepository repository, IMapper mapper)
+        public MemberManagementService(IMemberRepository repository, IMapper mapper)
         {
             _repository = repository;
             _mapper = mapper;
