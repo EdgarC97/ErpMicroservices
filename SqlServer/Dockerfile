@@ -1,17 +1,20 @@
+# Dockerfile personalizado para SQL Server 2019 en Render
+
 # Usa la imagen oficial de SQL Server 2019
 FROM mcr.microsoft.com/mssql/server:2019-latest
 
-# Cambia a usuario root para ajustar permisos
+# Cambiar a usuario root para ajustar permisos
 USER root
 
-# Cambia los permisos del binario sqlservr para asegurarte de que se pueda ejecutar
-RUN chmod +x /opt/mssql/bin/sqlservr
+# Asegurarse de que el binario sqlservr tenga permisos de ejecución y que su propietario sea mssql
+RUN chmod 755 /opt/mssql/bin/sqlservr && \
+    chown mssql:mssql /opt/mssql/bin/sqlservr
 
-# Opcional: Verifica los permisos (puedes eliminar esta línea en producción)
+# (Opcional) Puedes listar los permisos para verificar; en producción, podrías quitar esta línea
 RUN ls -l /opt/mssql/bin/sqlservr
 
-# Cambia de nuevo al usuario mssql (no-root) por seguridad
+# Cambia de nuevo al usuario mssql para cumplir con las políticas de seguridad de Render
 USER mssql
 
-# Establece el comando por defecto
+# Establece el comando por defecto para iniciar SQL Server
 CMD ["/opt/mssql/bin/sqlservr"]
